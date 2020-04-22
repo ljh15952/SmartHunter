@@ -304,7 +304,10 @@ namespace SmartHunter.Config
             { "LOC_STATUS_EFFECT_ALL_AILMENTS_NEGATED", "All Ailments Negated" },
             { "LOC_STATUS_EFFECT_WIND_PRESSURE_NEGATED_AND_EARPLUGS_S", "Wind Pressure Negated & Earplugs (S)" },
             { "LOC_STATUS_EFFECT_ABNORMAL_STATUS_ATTACK_INCREASED", "Abnormal Status Atk. Increased" },
-            
+            { "LOC_STATUS_EFFECT_STAMINA_UP_AND_RECOVERY", "Stamina Up & Recovery"},
+            { "LOC_STATUS_EFFECT_EXTENDED_HEALTH_RECOVERY", "Extended Health Recovery"},
+            { "LOC_STATUS_EFFECT_SPEED_BOOST_AND_EVADE_WINDOW_UP","Speed Boost & Evade Window Up" },
+            { "LOC_STATUS_EFFECT_ELEMENTAL_EFFECTIVENESS_UP", "Elemental Effectiveness Up"},
             // Orchestra
             { "LOC_STATUS_EFFECT_HEALTH_RECOVERY", "Health Recovery" },
             { "LOC_STATUS_EFFECT_HEALTH_BOOST", "Health Boost" },
@@ -340,7 +343,7 @@ namespace SmartHunter.Config
             { "LOC_STATUS_EFFECT_ARMORSKIN", "Armorskin" },
             { "LOC_STATUS_EFFECT_MEGA_ARMORSKIN", "Mega Armorskin" },
             { "LOC_STATUS_EFFECT_COOL_DRINK", "Cool Drink" },
-            { "LOC_STATUS_EFFECT_HOT_DRINK", "Hot Drink" },    
+            { "LOC_STATUS_EFFECT_HOT_DRINK", "Hot Drink" },
             { "LOC_STATUS_EFFECT_HEALTH_RECOVERY(HOT_SPRING)","Health Recovery (Hot Spring)"},
             { "LOC_STATUS_EFFECT_CLODPROOF(HOT_SPRING)","Clodproof (Hot Spring)"},
             { "LOC_STATUS_EFFECT_ATTACK_UP(POWERCONE)","Attack UP (Powercone)"},

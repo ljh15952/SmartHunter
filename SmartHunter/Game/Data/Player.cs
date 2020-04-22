@@ -46,8 +46,7 @@ namespace SmartHunter.Game.Data
         {
             if (this.Damage == 0 && other.Damage == 0)
                 return 0;
-            int num = this.Damage > other.Damage ? -1 : 1;
-            return num;
+            return this.Damage > other.Damage ? -1 : 1;
         }
 
         public override string ToString()
