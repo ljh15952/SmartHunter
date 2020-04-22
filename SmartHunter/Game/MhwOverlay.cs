@@ -88,7 +88,7 @@ namespace SmartHunter.Game
                 {
                     players.Sort();
                     foreach (var player in players)
-                        str += String.Format("{0} {1}% ", player.Name.Length >= 3 ? player.Name.Substring(0, 3) : player.Name, (player.DamageFraction * 100).ToString("0.##"));
+                        str += String.Format("{0} {1}% ", player.Name.Length >= 3 ? player.Name.Substring(0, 3) : player.Name, Math.Round(player.DamageFraction * 100).ToString());
                 }
                 else
                     str = "No Team Damage";
