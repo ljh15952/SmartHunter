@@ -45,10 +45,10 @@ namespace SmartHunter.Game.Helpers
                 public static readonly ulong SizeScale = 0x188;
                 public static readonly ulong ScaleModifier = 0x7730;
                 public static readonly ulong PartCollection = 0x14528;
-                public static readonly ulong RemovablePartCollection = PartCollection + 0x22A0 - 0xF0 - 0xF0 - 0xF0;
+                public static readonly ulong RemovablePartCollection = PartCollection + 0x22A0 - 0xF0 - 0xF0 - 0xF0 - 0x38;
                 public static readonly ulong StatusEffectCollection = 0x19900;
-                public static readonly ulong MonsterStaminaOffset = 0x1C130; //0x1BE20(???) 0x1C0D8(old) 0x1C130(now)
-                public static readonly ulong MonsterRageOffset = 0x1BE88; //0x1BE20(???) 0x1BE30(old) 0x1BE88(now)
+                public static readonly ulong MonsterStaminaOffset = 0x1C0F0; //0x1BE20(???) 0x1C0D8(old) 0x1C130(now)
+                public static readonly ulong MonsterRageOffset = 0x1BE54; //0x1BE20(???) 0x1BE30(old) 0x1BE88(now)
             }
 
             public static class MonsterModel
@@ -66,21 +66,21 @@ namespace SmartHunter.Game.Helpers
             public static class MonsterPartCollection
             {
                 public static readonly int MaxItemCount = 16;
-                public static readonly ulong FirstPart = 0x50;
+                public static readonly ulong FirstPart = 0x1C;
             }
 
             public static class MonsterPart
             {
-                public static readonly ulong MaxHealth = 0x0C;
-                public static readonly ulong CurrentHealth = 0x10;
-                public static readonly ulong TimesBrokenCount = 0x18;
+                public static readonly ulong MaxHealth = 0x00;//0x0c
+                public static readonly ulong CurrentHealth = 0x04;//0x10
+                public static readonly ulong TimesBrokenCount = 0x0C;//0x18
                 public static readonly ulong NextPart = 0x1F8;//0x3F0;
             }
 
             public static class MonsterRemovablePartCollection
             {
                 public static readonly int MaxItemCount = 32;
-                public static readonly ulong FirstRemovablePart = 0x08;
+                public static readonly ulong FirstRemovablePart = 0x78;
             }
 
             public static class MonsterRemovablePart
@@ -434,23 +434,26 @@ namespace SmartHunter.Game.Helpers
                 }
 
                 List<ulong> monsterAddresses = new List<ulong>();
-
-                ulong firstMonster = MemoryHelper.Read<ulong>(process, monsterBaseList + DataOffsets.Monster.PreviousMonsterOffset);
+                //https://github.com/Haato3o/HunterPie
+                /*
+                //ulong firstMonster = MemoryHelper.Read<ulong>(process, monsterBaseList + DataOffsets.Monster.PreviousMonsterOffset);
 
                 if (firstMonster == 0x0)
                 {
                     firstMonster = monsterBaseList;
                 }
 
-                firstMonster += DataOffsets.Monster.MonsterStartOfStructOffset;
+                //firstMonster += DataOffsets.Monster.MonsterStartOfStructOffset;
 
-                ulong currentMonsterAddress = firstMonster;
+                //ulong currentMonsterAddress = firstMonster;
                 while (currentMonsterAddress != 0)
                 {
                     monsterAddresses.Insert(0, currentMonsterAddress);
                     currentMonsterAddress = MemoryHelper.Read<ulong>(process, currentMonsterAddress + DataOffsets.Monster.NextMonsterOffset);
-                }
-
+                }*/
+                monsterAddresses.Insert(0, monsterBaseList);
+                monsterAddresses.Insert(0, MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x40);
+                monsterAddresses.Insert(0, MemoryHelper.Read<ulong>(process, MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x10) + 0x40);
                 List<Monster> updatedMonsters = new List<Monster>();
                 foreach (var monsterAddress in monsterAddresses)
                 {
@@ -628,10 +631,12 @@ namespace SmartHunter.Game.Helpers
         {
             Monster monster = null;
 
-            ulong tmp = monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.MonsterHealthComponentOffset;
+            //ulong tmp = monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.MonsterHealthComponentOffset;
+            ulong tmp = monsterAddress + DataOffsets.Monster.MonsterHealthComponentOffset;
             ulong health_component = MemoryHelper.Read<ulong>(process, tmp);
-
-            string id = MemoryHelper.ReadString(process, tmp + DataOffsets.MonsterModel.IdOffset, (uint)DataOffsets.MonsterModel.IdLength);
+            ulong nameptr = MemoryHelper.Read<ulong>(process, monsterAddress + 0x2A0);
+            string id = MemoryHelper.ReadString(process, nameptr + 0x0C, (uint)DataOffsets.MonsterModel.IdLength);
+            //string id = MemoryHelper.ReadString(process, tmp + DataOffsets.MonsterModel.IdOffset, (uint)DataOffsets.MonsterModel.IdLength);
             float maxHealth = MemoryHelper.Read<float>(process, health_component + DataOffsets.MonsterHealthComponent.MaxHealth);
 
             if (String.IsNullOrEmpty(id))
@@ -651,8 +656,10 @@ namespace SmartHunter.Game.Helpers
             }
 
             float currentHealth = MemoryHelper.Read<float>(process, health_component + DataOffsets.MonsterHealthComponent.CurrentHealth);
-            float sizeScale = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.SizeScale);
-            float scaleModifier = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.ScaleModifier);
+            //float sizeScale = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.SizeScale);
+            //float scaleModifier = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.MonsterStartOfStructOffset + DataOffsets.Monster.ScaleModifier);
+            float sizeScale = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.SizeScale);
+            float scaleModifier = MemoryHelper.Read<float>(process, monsterAddress + DataOffsets.Monster.ScaleModifier);
             if (scaleModifier <= 0 || scaleModifier >= 2)
             {
                 scaleModifier = 1;
@@ -718,7 +725,7 @@ namespace SmartHunter.Game.Helpers
                     ulong currentPartOffset = DataOffsets.MonsterPart.NextPart * (ulong)index;
                     ulong currentPartAddress = firstPartAddress + currentPartOffset;
 
-                    float maxHealth = MemoryHelper.Read<float>(process, currentPartAddress + DataOffsets.MonsterPart.MaxHealth);
+                    float maxHealth = MemoryHelper.Read<float>(process, currentPartAddress);
 
                     if (maxHealth > 0)
                     {
@@ -749,7 +756,8 @@ namespace SmartHunter.Game.Helpers
             }
             else
             {
-                ulong removablePartAddress = monster.Address + DataOffsets.Monster.RemovablePartCollection + DataOffsets.MonsterRemovablePartCollection.FirstRemovablePart;
+                //ulong removablePartAddress = monster.Address + DataOffsets.Monster.RemovablePartCollection + DataOffsets.MonsterRemovablePartCollection.FirstRemovablePart;
+                ulong removablePartAddress = monster.Address + DataOffsets.Monster.RemovablePartCollection;
                 for (int index = 0; index < DataOffsets.MonsterRemovablePartCollection.MaxItemCount; ++index)
                 {
                     // Every 16 elements there seems to be a new removable part collection. When we reach this point,
@@ -832,7 +840,7 @@ namespace SmartHunter.Game.Helpers
             }
             else
             {
-                ulong baseStatus = MemoryHelper.Read<ulong>(process, monster.Address + DataOffsets.Monster.MonsterStartOfStructOffset + 0x78);
+                ulong baseStatus = MemoryHelper.Read<ulong>(process, monster.Address + 0x78);
                 baseStatus = MemoryHelper.Read<ulong>(process, baseStatus + 0x57A8);
                 ulong nani = baseStatus;
                 while (nani != 0)
@@ -847,7 +855,7 @@ namespace SmartHunter.Game.Helpers
                 while (currentStatusPointer != 0x0)
                 {
                     var currentMonsterInStatus = MemoryHelper.Read<ulong>(process, currentStatusPointer + 0x188);
-                    if (currentMonsterInStatus == monster.Address + 0x40 && !monster.StatusEffects.Where(status => status.Address == currentStatusPointer).Any())
+                    if (currentMonsterInStatus == monster.Address && !monster.StatusEffects.Where(status => status.Address == currentStatusPointer).Any())
                     {
                         float currentBuildup = 0;
                         float maxBuildup = MemoryHelper.Read<float>(process, currentStatusPointer + DataOffsets.MonsterStatusEffect.MaxBuildup);
@@ -886,13 +894,13 @@ namespace SmartHunter.Game.Helpers
             {
                 currentStaminaBuildUp = MemoryHelper.Read<float>(process, staminaAddress);
             }
-            float maxFatigueDuration = MemoryHelper.Read<float>(process, staminaAddress + 0xC);
+            float maxFatigueDuration = MemoryHelper.Read<float>(process, staminaAddress + 0x8);
             float currentFatigueDuration = 0;
             if (maxFatigueDuration > 0)
             {
-                currentFatigueDuration = MemoryHelper.Read<float>(process, staminaAddress + 0x10);
+                currentFatigueDuration = MemoryHelper.Read<float>(process, staminaAddress + 0x0C);
             }
-            int fatigueActivatedCount = MemoryHelper.Read<int>(process, staminaAddress + 0x14);
+            int fatigueActivatedCount = MemoryHelper.Read<int>(process, staminaAddress + 0x10);
             MonsterStatusEffectConfig statusEffect = null;
             if (currentFatigueDuration > 0)
             {
@@ -911,19 +919,19 @@ namespace SmartHunter.Game.Helpers
             // Rage
 
             ulong rageAddress = monster.Address + DataOffsets.Monster.MonsterRageOffset;
-            float maxRageBuildUp = MemoryHelper.Read<float>(process, rageAddress + 0x24);
+            float maxRageBuildUp = MemoryHelper.Read<float>(process, rageAddress + 0x0C);
             float currentRageBuildUp = 0;
             if (maxRageBuildUp > 0)
             {
-                currentRageBuildUp = MemoryHelper.Read<float>(process, rageAddress);
+                currentRageBuildUp = MemoryHelper.Read<float>(process, rageAddress + 0x08);
             }
-            float maxRageDuration = MemoryHelper.Read<float>(process, rageAddress + 0x10);
+            float maxRageDuration = MemoryHelper.Read<float>(process, rageAddress + 0x04);
             float currentRageDuration = 0;
             if (maxRageDuration > 0)
             {
-                currentRageDuration = MemoryHelper.Read<float>(process, rageAddress + 0xC);
+                currentRageDuration = MemoryHelper.Read<float>(process, rageAddress + 0x00);
             }
-            int rageActivatedCount = MemoryHelper.Read<int>(process, rageAddress + 0x1C);
+            int rageActivatedCount = MemoryHelper.Read<int>(process, rageAddress + 0x10);
             var rageStatusEffect = ConfigHelper.MonsterData.Values.StatusEffects.SingleOrDefault(s => s.GroupId.Equals("Rage"));//[33]; // 33 is rage
             if (maxRageBuildUp > 0 || maxRageDuration > 0)
             {
