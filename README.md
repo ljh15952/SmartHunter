@@ -11,7 +11,7 @@ A complete overlay for Monster Hunter: World on PC. Distributed on [Nexus Mods](
 
 ## Changelog
 
-- Look [here](https://forums.nexusmods.com/index.php?/topic/8356533-smarthunter-for-iceborne/)
+- Look [here](https://github.com/dragonyue0417/SmartHunter/commits/master)
 
 ## Requirements
 
@@ -20,10 +20,7 @@ A complete overlay for Monster Hunter: World on PC. Distributed on [Nexus Mods](
 
 ## How to install
 
-- Download `SmartHunter.exe` and `Newtonsoft.Json.dll` from [here](https://github.com/gabrielefilipp/SmartHunter/tree/master/SmartHunter/bin/Debug).
-- Place them in a new folder.
-- IMPORTANT: If you are replacing the new `.exe` in the same folder of the old SmartHunter please just follow the instructions `## How to update`.
-- You're ready for the hunt.
+- Download from [here](https://github.com/dragonyue0417/SmartHunter/releases).
 
 ## How to use
 
