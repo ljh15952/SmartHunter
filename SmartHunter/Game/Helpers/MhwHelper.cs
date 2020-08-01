@@ -677,12 +677,14 @@ namespace SmartHunter.Game.Helpers
                         UpdateMonsterRemovableParts(process, monster);
                     }
                     UpdateMonsterStatusEffects(process, monster);
+                    UpdateMonsterPartsSoften(process, monster);
                 }
                 else
                 {
                     if (!OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.helloDone || !OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.checkDone)
                     {
                         UpdateMonsterStatusEffects(process, monster);
+                        UpdateMonsterPartsSoften(process, monster);
                     }
                 }
             }
@@ -808,6 +810,34 @@ namespace SmartHunter.Game.Helpers
 
             return monster.UpdateAndGetPart(removablePartAddress, true, maxHealth, currentHealth, timesBrokenCount);
         }
+
+        private static void UpdateMonsterPartsSoften(Process process, Monster monster)
+        {
+            for (int i = 0; i <= 10; i++)
+            {
+                ulong softenAddress = monster.Address + 0x1C458 + (ulong)(i * 0x40);
+                float maxTime = MemoryHelper.Read<float>(process, softenAddress + 0x0C) + MemoryHelper.Read<float>(process, softenAddress + 0x24);
+                float currentTime = MemoryHelper.Read<float>(process, softenAddress + 0x08) + MemoryHelper.Read<float>(process, softenAddress + 0x20);
+                uint timesBrokenCount = MemoryHelper.Read<uint>(process, softenAddress + 0x34);
+                uint partid = MemoryHelper.Read<uint>(process, softenAddress + 0x30);
+
+                var partsoftens = monster.PartSoftens.Where(partsoften => partsoften.Address == softenAddress);
+                if (partsoftens.Any())
+                    foreach (var partsoften in partsoftens)
+                        if (partid != uint.MaxValue && maxTime > 0 && maxTime >= currentTime && partsoften.Time.Max == maxTime)
+                            monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesBrokenCount, partid);
+                        else
+                            monster.UpdateAndGetPartSoften(softenAddress, partsoften.Time.Max, 0, partsoften.TimesBrokenCount, partsoften.PartID);
+                else if (partid != uint.MaxValue && maxTime > 0 && maxTime >= currentTime)
+                    monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesBrokenCount, partid);
+            }
+        }
+
+        /*private static void UpdateMonsterPartSoften(Process process, Monster monster, ulong softenAddress, float maxTime, float currentTime, uint timesBrokenCount, uint partID)
+        {
+            monster.UpdateAndGetPartSoften(softenAddress, maxTime, currentTime, timesBrokenCount, partID);
+        }*/
+
 
         private static void UpdateMonsterStatusEffects(Process process, Monster monster)
         {

@@ -191,20 +191,26 @@ namespace SmartHunter.Game.Config
             new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_ATTACK", (uint)StatusEffectConfig.MemorySource.Weapon, "1FE8", WeaponType.INSECT_GLAIVE),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_SPEED", (uint)StatusEffectConfig.MemorySource.Weapon, "1FEC", WeaponType.INSECT_GLAIVE),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_DEFENSE", (uint)StatusEffectConfig.MemorySource.Weapon, "1FF0", WeaponType.INSECT_GLAIVE),
-            */
-            // Working
-
             new StatusEffectConfig("Weapon", "LOC_WEAPON_LONGSWORD_SPIRIT_GAUGE_REGEN_HELM_BREAKER", (uint)WeaponType.LONG_SWORD, indexToHexStrNoOffset(2402)),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_LONGSWORD_SPIRIT_GAUGE_REGEN_LAI_SLASH", (uint)WeaponType.LONG_SWORD, indexToHexStrNoOffset(2406)),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_LONGSWORD_STEADY_SPIRIT_LEVEL", (uint)WeaponType.LONG_SWORD, indexToHexStrNoOffset(2408)),
-
-            // Not Working
-            /*
             new StatusEffectConfig("Weapon", "LOC_WEAPON_CHARGE_BLADE_SHIELD_CHARGE", (uint)StatusEffectConfig.MemorySource.Weapon, "1FF8", WeaponType.CHARGE_BLADE),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_CHARGE_BLADE_BLADE_CHARGE", (uint)StatusEffectConfig.MemorySource.Weapon, "1FFC", WeaponType.CHARGE_BLADE),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_SWITCH_AXE_AMPED_STATE", (uint)StatusEffectConfig.MemorySource.Weapon, "1FD4", WeaponType.SWITCH_AXE),
             new StatusEffectConfig("Weapon", "LOC_WEAPON_HAMMER_POWER_CHARGE", (uint)StatusEffectConfig.MemorySource.Weapon, null, WeaponType.HAMMER, new MemoryConditionConfig((byte)1, "1FC4"))
             */
+            //Working
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_CHARGE_BLADE_SHIELD_CHARGE", (uint)WeaponType.CHARGE_BLADE, indexToHexStrNoOffset(2270)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_CHARGE_BLADE_BLADE_CHARGE", (uint)WeaponType.CHARGE_BLADE, indexToHexStrNoOffset(2271)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_CHARGE_BLADE_PHIAL_EXPIRES", (uint)WeaponType.CHARGE_BLADE, indexToHexStrNoOffset(2332)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_LONGSWORD_SPIRIT_GAUGE_REGEN_LAI_SLASH",  (uint)WeaponType.LONG_SWORD, indexToHexStrNoOffset(2269)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_LONGSWORD_STEADY_SPIRIT_LEVEL",  (uint)WeaponType.LONG_SWORD, indexToHexStrNoOffset(2268)),
+
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_ATTACK", (uint)WeaponType.INSECT_GLAIVE, indexToHexStrNoOffset(2266)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_SPEED", (uint)WeaponType.INSECT_GLAIVE, indexToHexStrNoOffset(2267)),
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_INSECT_GLAIVE_DEFENSE", (uint)WeaponType.INSECT_GLAIVE, indexToHexStrNoOffset(2268)),
+
+            new StatusEffectConfig("Weapon", "LOC_WEAPON_SWITCH_AXE_AMPED_STATE", (uint)WeaponType.SWITCH_AXE, indexToHexStrNoOffset(2260)),
             };
     }
 }

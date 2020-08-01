@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using SmartHunter.Core;
 
 namespace SmartHunter.Game.Helpers
@@ -8,6 +8,7 @@ namespace SmartHunter.Game.Helpers
         public static readonly string MissingStringId = "LOC_MISSING";
         public static readonly string UnknownMonsterStringId = "LOC_MONSTER_UKNOWN";
         public static readonly string UnknownPartStringId = "LOC_PART_UKNOWN";
+        public static readonly string UnknownSoftenPartId = "LOC_SOFTEN_PARTID_UKNOWN";
         public static readonly string UnknownRemovablePartStringId = "LOC_REMOVABLE_PART_UKNOWN";
         public static readonly string UnknownMonsterStatusEffectStringId = "LOC_STATUS_EFFECT_UKNOWN";
         public static readonly string UnknownPlayerStatusEffectStringId = "LOC_STATUS_EFFECT_UKNOWN";
@@ -66,6 +67,22 @@ namespace SmartHunter.Game.Helpers
             }
 
             return GetString(UnknownRemovablePartStringId);
+        }
+
+        public static string GetMonsterSoftenPartName(string monsterId, uint partId)
+        {
+            if (ConfigHelper.MonsterData.Values.Monsters.TryGetValue(monsterId, out var monsterConfig))
+            {
+                if (monsterConfig.SoftenParts != null)
+                {
+                    var softenParts = monsterConfig.SoftenParts.Where(softenPart => softenPart.PartIds.Contains(partId));
+                    if (softenParts.Count() == 1)
+                        return GetString(softenParts.ElementAt(0).StringId);
+                }
+                Log.WriteLine($"Localization: Monster '{monsterId}' soften partid '{partId}' not found in {ConfigHelper.MonsterData.FileName}");
+            }
+            Log.WriteLine($"Localization: Monster '{monsterId}' soften partid '{partId}' not found in {ConfigHelper.MonsterData.FileName}");
+            return GetString(UnknownSoftenPartId) + " " + monsterId + " partId:" + partId;
         }
 
         public static string GetMonsterStatusEffectName(int index)

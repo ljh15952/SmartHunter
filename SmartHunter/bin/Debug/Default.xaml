@@ -42,6 +42,7 @@
 
     <Color x:Key="A_Color_Monster_Bar">#CC0000</Color>
     <Color x:Key="A_Color_Monster_Part_Bar">#CC0000</Color>
+    <Color x:Key="A_Color_Monster_Part_Soften_Bar">#FCB252</Color>
     <Color x:Key="A_Color_Monster_StatusEffect_Bar">#00CCCC</Color>
 
     <Color x:Key="A_Color_PlayerStatusEffect_Group_Horn">#FFE1A9</Color>
@@ -589,6 +590,171 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type data:MonsterPartSoften}">
+        <StackPanel x:Name="Root" Margin="0 9 0 0" Visibility="Collapsed" Opacity="0">
+            <DockPanel>
+                <Grid>
+                    <TextBlock x:Name="NameBlockShadow" Text="{Binding Name}" Style="{StaticResource A_Style_TextBlock_Standard}" Foreground="{StaticResource A_Brush_DropShadow}" RenderTransform="{StaticResource A_Transform_DropShadow}" />
+                    <TextBlock x:Name="NameBlock" Text="{Binding Name}" Style="{StaticResource A_Style_TextBlock_Standard}" />
+                </Grid>
+
+                <ContentControl x:Name="TimesBrokenGraphic" Visibility="Collapsed" Margin="6 -3 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" ContentTemplate="{StaticResource A_DataTemplate_SquareInfoGraphic}">
+                    <ContentControl.Background>
+                        <SolidColorBrush Color="{Binding Source={StaticResource A_Color_Monster_Part_Soften_Bar}}" />
+                    </ContentControl.Background>
+                    <MultiBinding ConverterParameter="{}{0}" Converter="{StaticResource A_Converter_StringFormat}">
+                        <Binding Path="TimesBrokenCount" Mode="OneWay" />
+                    </MultiBinding>
+                </ContentControl>
+
+                <Grid HorizontalAlignment="Right" Margin="12 0 0 0">
+                    <TextBlock x:Name="HealthBlockShadow" Style="{StaticResource A_Style_TextBlock_Standard}" Foreground="{StaticResource A_Brush_DropShadow}" RenderTransform="{StaticResource A_Transform_DropShadow}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0:0}/{1:0} ({2})">
+                                <Binding Path="Time.Current" Mode="OneWay" />
+                                <Binding Path="Time.Max" Mode="OneWay" />
+                                <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <TextBlock x:Name="HealthBlock" Style="{StaticResource A_Style_TextBlock_Standard}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0:0}/{1:0} ({2})">
+                                <Binding Path="Time.Current" Mode="OneWay" />
+                                <Binding Path="Time.Max" Mode="OneWay" />
+                                <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+
+            <ContentControl x:Name="Bar" Content="{Binding Time.Fraction}" ContentTemplate="{StaticResource A_DataTemplate_BarProgress}" Height="3" Margin="0 2 0 0">
+                <ContentControl.Foreground>
+                    <SolidColorBrush Color="{StaticResource A_Color_Monster_Part_Soften_Bar}" />
+                </ContentControl.Foreground>
+            </ContentControl>
+        </StackPanel>
+
+        <DataTemplate.Triggers>
+            <Trigger Property="pfComponentModel:DesignerProperties.IsInDesignMode" Value="True">
+                <Setter TargetName="Root" Property="Visibility" Value="Visible" />
+                <Setter TargetName="Root" Property="Opacity" Value="1" />
+            </Trigger>
+
+            <DataTrigger Binding="{Binding DataContext.ShowBars, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="False">
+                <Setter TargetName="Bar" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                <DataTrigger.EnterActions>
+                    <StopStoryboard BeginStoryboardName="Hide" />
+                    <BeginStoryboard x:Name="Show" Storyboard="{StaticResource A_Storyboard_Show}" />
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <DataTrigger.EnterActions>
+                    <StopStoryboard BeginStoryboardName="Show" />
+                    <BeginStoryboard x:Name="Hide" Storyboard="{StaticResource A_Storyboard_Hide}" />
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding TimesBrokenCount, Converter={StaticResource A_Converter_NumberGreater}}" Value="True">
+                <Setter TargetName="TimesBrokenGraphic" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+
+            <!--Show Numbers AND Percents-->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding DataContext.ShowNumbers, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="True" />
+                    <Condition Binding="{Binding DataContext.ShowPercents, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="HealthBlockShadow" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{0:0}/{1:0} ({2})">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="HealthBlock" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{0:0}/{1:0} ({2})">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+
+            <!--Show Numbers NOT Percents-->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding DataContext.ShowNumbers, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="True" />
+                    <Condition Binding="{Binding DataContext.ShowPercents, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="HealthBlockShadow" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{0:0}/{1:0}">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="HealthBlock" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{0:0}/{1:0}">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+
+            <!--Show NOT Numbers AND Percents-->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding DataContext.ShowNumbers, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="False" />
+                    <Condition Binding="{Binding DataContext.ShowPercents, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="HealthBlockShadow" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{2}">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="HealthBlock" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{2}">
+                            <Binding Path="Time.Current" Mode="OneWay" />
+                            <Binding Path="Time.Max" Mode="OneWay" />
+                            <Binding Path="Time.Fraction" Converter="{StaticResource A_Converter_FractionToPercentage}" Mode="OneWay" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+
+            <!--Show NOT Numbers NOT Percents-->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding DataContext.ShowNumbers, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="False" />
+                    <Condition Binding="{Binding DataContext.ShowPercents, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="HealthBlockShadow" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="HealthBlock" Property="Visibility" Value="Collapsed" />
+            </MultiDataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type data:MonsterPart}">
         <StackPanel x:Name="Root" Margin="0 9 0 0" Visibility="Collapsed" Opacity="0">
             <DockPanel>
@@ -758,9 +924,6 @@
         <StackPanel x:Name="Root" Width="300" Visibility="Collapsed" Opacity="0">
             <StackPanel.Resources>
                 <CollectionViewSource x:Key="CollectionViewSource" Source="{Binding Parts}" IsLiveSortingRequested="True">
-                    <CollectionViewSource.LiveSortingProperties>
-                        <system:String>Damage</system:String>
-                    </CollectionViewSource.LiveSortingProperties>
                     <CollectionViewSource.SortDescriptions>
                         <wbComponentModel:SortDescription PropertyName="IsRemovable" Direction="Descending" />
                     </CollectionViewSource.SortDescriptions>
@@ -832,6 +995,7 @@
 
             <ItemsControl x:Name="PartsControl" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" />
             <ItemsControl ItemsSource="{Binding StatusEffects}" />
+            <ItemsControl ItemsSource="{Binding PartSoftens}" />
         </StackPanel>
 
         <DataTemplate.Triggers>
@@ -1520,7 +1684,7 @@
             <Grid.Background>
                 <SolidColorBrush Color="{StaticResource A_Color_Widget_Background}" />
             </Grid.Background>
-            
+
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

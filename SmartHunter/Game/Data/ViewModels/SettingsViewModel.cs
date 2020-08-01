@@ -137,6 +137,12 @@ namespace SmartHunter.Game.Data.ViewModels
                 ConfigHelper.Main.Save();
             })));
 
+            Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSoftenParts, GetString("LOC_SETTING_SHOW_SOFTEN_PARTS"), GetString("LOC_SETTING_SHOW_SOFTEN_PARTS_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSoftenParts = !ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSoftenParts;
+                ConfigHelper.Main.Save();
+            })));
+
             Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSize, GetString("LOC_SETTING_SHOW_MONSTER_SIZE"), GetString("LOC_SETTING_SHOW_MONSTER_SIZE_DESC"), new Command(_ =>
             {
                 ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSize = !ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowSize;

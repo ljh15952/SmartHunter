@@ -88,7 +88,7 @@ namespace SmartHunter.Config
             { "LOC_MONSTER_ZORAH_MAGDAROS", "Zorah Magdaros" },
             { "LOC_MONSTER_ALATREON", "Alatreon"},
             { "LOC_PART_UKNOWN", "Unknown Part" },
-
+            { "LOC_SOFTEN_PARTID_UKNOWN", "Unknown Soften PartId" },
             { "LOC_PART_HEAD_SNOW", "Head Snow" },
             { "LOC_PART_BODY_SNOW", "Body Snow" },
             { "LOC_PART_TAIL_SNOW", "Tail Snow" },
@@ -463,6 +463,8 @@ namespace SmartHunter.Config
             { "LOC_SETTING_SHOW_UNCHANGED_PARTS_DESC", "Automatically hide monsters parts if they are not damaged"},
             { "LOC_SETTING_SHOW_UNCHANGED_STATUS_EFFECTS", "Show unchanged status effects"},
             { "LOC_SETTING_SHOW_UNCHANGED_STATUS_EFFECTS_DESC", "Automatically hide monsters status effects when there weren't any changes"},
+            { "LOC_SETTING_SHOW_SOFTEN_PARTS", "Show soften parts"},
+            { "LOC_SETTING_SHOW_SOFTEN_PARTS_DESC", "Show soften part and remaining time"},
             { "LOC_SETTING_SHOW_MONSTER_SIZE", "Show monster size"},
             { "LOC_SETTING_SHOW_MONSTER_SIZE_DESC", "Show monster size hover its name"},
             { "LOC_SETTING_SHOW_MONSTER_CROWN", "Show monster crown"},

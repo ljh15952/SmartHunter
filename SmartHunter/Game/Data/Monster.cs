@@ -101,7 +101,7 @@ namespace SmartHunter.Game.Data
         {
             get
             {
-                float size = 0; 
+                float size = 0;
 
                 MonsterConfig config = null;
                 if (ConfigHelper.MonsterData.Values.Monsters.TryGetValue(Id, out config))
@@ -143,6 +143,7 @@ namespace SmartHunter.Game.Data
 
         public Progress Health { get; private set; }
         public ObservableCollection<MonsterPart> Parts { get; private set; }
+        public ObservableCollection<MonsterPartSoften> PartSoftens { get; private set; }
         public ObservableCollection<MonsterStatusEffect> StatusEffects { get; private set; }
 
         public bool IsVisible
@@ -162,6 +163,7 @@ namespace SmartHunter.Game.Data
             m_ScaleModifier = scaleModifier;
 
             Parts = new ObservableCollection<MonsterPart>();
+            PartSoftens = new ObservableCollection<MonsterPartSoften>();
             StatusEffects = new ObservableCollection<MonsterStatusEffect>();
         }
 
@@ -188,10 +190,37 @@ namespace SmartHunter.Game.Data
             return part;
         }
 
+        public MonsterPartSoften UpdateAndGetPartSoften(ulong address, float maxTime, float currentTime, uint timesBrokenCount, uint partID)
+        {
+            MonsterPartSoften partSoften = PartSoftens.SingleOrDefault(collectionPartSoften => collectionPartSoften.Address == address);
+            if (partSoften != null)
+            {
+                partSoften.Time.Max = maxTime;
+                partSoften.Time.Current = currentTime;
+                partSoften.TimesBrokenCount = timesBrokenCount;
+                if (partSoften.PartID != partID)
+                {
+                    partSoften.PartID = partID;
+                    partSoften.NotifyPropertyChanged(nameof(MonsterPartSoften.Name));
+                }
+            }
+            else
+            {
+                partSoften = new MonsterPartSoften(this, address, maxTime, currentTime, timesBrokenCount, partID);
+                partSoften.Changed += PartOrStatusEffect_Changed;
+
+                PartSoftens.Add(partSoften);
+            }
+
+            partSoften.NotifyPropertyChanged(nameof(MonsterPartSoften.IsVisible));
+
+            return partSoften;
+        }
+
         public MonsterStatusEffect UpdateAndGetStatusEffect(ulong address, int index, float maxBuildup, float currentBuildup, float maxDuration, float currentDuration, int timesActivatedCount)
         {
             MonsterStatusEffect statusEffect = StatusEffects.SingleOrDefault(collectionStatusEffect => collectionStatusEffect.Index == index); // TODO: check address???
-            
+
             if (statusEffect != null)
             {
                 //statusEffect.Address = Address;
@@ -225,6 +254,10 @@ namespace SmartHunter.Game.Data
             foreach (var statusEffect in StatusEffects)
             {
                 statusEffect.NotifyPropertyChanged(nameof(MonsterStatusEffect.Name));
+            }
+            foreach (var partSoften in PartSoftens)
+            {
+                partSoften.NotifyPropertyChanged(nameof(MonsterPartSoften.Name));
             }
         }
 
