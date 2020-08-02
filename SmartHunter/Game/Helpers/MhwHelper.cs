@@ -826,10 +826,9 @@ namespace SmartHunter.Game.Helpers
 
         private static void UpdateMonsterPartsSoften(Process process, Monster monster)
         {
-            ulong softenAddress = monster.Address + DataOffsets.MonsterSoftenPart.SoftenPartOffset;
             for (int i = 0; i <= 10; i++)
             {
-                softenAddress += (ulong)i * DataOffsets.MonsterSoftenPart.NextSoftenPart;
+                ulong softenAddress = monster.Address + DataOffsets.MonsterSoftenPart.SoftenPartOffset + (ulong)i * DataOffsets.MonsterSoftenPart.NextSoftenPart;
                 float maxTime = MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.MaxDuration) + MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.MaxExtraDuration);
                 float currentTime = MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.CurrentDuration) + MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.CurrentExtraDuration);
                 uint timesCount = MemoryHelper.Read<uint>(process, softenAddress + DataOffsets.MonsterSoftenPart.TimesCountOffset);
