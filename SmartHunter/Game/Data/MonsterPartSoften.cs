@@ -19,19 +19,17 @@ namespace SmartHunter.Game.Data
             set { SetProperty(ref m_PartID, value); }
         }
 
-        uint m_TimesBrokenCount;
-        public uint TimesBrokenCount
+        uint m_TimesCount;
+        public uint TimesCount
         {
-            get { return m_TimesBrokenCount; }
-            set { SetProperty(ref m_TimesBrokenCount, value); }
+            get { return m_TimesCount; }
+            set { SetProperty(ref m_TimesCount, value); }
         }
 
         public string Name
         {
             get
             {
-                //return LocalizationHelper.GetMonsterPartName(m_Owner.Id, m_Owner.Parts.Where(part => part.IsRemovable == IsRemovable).ToList().IndexOf(this), IsRemovable);
-                //return Address + ":PartID:" + PartID + "Count:" + TimesBrokenCount;
                 return LocalizationHelper.GetMonsterSoftenPartName(m_Owner.Id, PartID);
             }
         }
@@ -40,8 +38,16 @@ namespace SmartHunter.Game.Data
         {
             get
             {
-                //return GetGroupIdFromIndex(m_Owner.Id, m_Owner.Parts.Where(part => part.IsRemovable == IsRemovable).ToList().IndexOf(this), IsRemovable);
-                return Address + ":PartID:" + PartID + "Count:" + TimesBrokenCount;
+                if (ConfigHelper.MonsterData.Values.Monsters.TryGetValue(m_Owner.Id, out var monsterConfig))
+                {
+                    if (monsterConfig.SoftenParts != null)
+                    {
+                        var softenParts = monsterConfig.SoftenParts.Where(softenPart => softenPart.PartIds.Contains(PartID));
+                        if (softenParts.Count() == 1)
+                            return softenParts.ElementAt(0).StringId;
+                    }
+                }
+                return "";
             }
         }
 
@@ -53,13 +59,13 @@ namespace SmartHunter.Game.Data
             }
         }
 
-        public MonsterPartSoften(Monster owner, ulong address, float maxTime, float currentTime, uint timesBrokenCount, uint partID)
+        public MonsterPartSoften(Monster owner, ulong address, float maxTime, float currentTime, uint timesCount, uint partID)
         {
             m_Owner = owner;
             Address = address;
             Time = new Progress(maxTime, currentTime);
             PartID = partID;
-            m_TimesBrokenCount = timesBrokenCount;
+            m_TimesCount = timesCount;
 
             PropertyChanged += MonsterPartSoften_PropertyChanged;
             Time.PropertyChanged += Time_PropertyChanged;
@@ -78,14 +84,9 @@ namespace SmartHunter.Game.Data
             UpdateLastChangedTime();
         }
 
-        public static string GetGroupIdFromIndex(string monsterId, int index)
-        {
-            return string.Format("{0}:{1}", monsterId, index);
-        }
-
         public static bool IsIncluded(string groupId)
         {
-            return ConfigHelper.Main.Values.Overlay.MonsterWidget.MatchIncludePartGroupIdRegex(groupId);
+            return ConfigHelper.Main.Values.Overlay.MonsterWidget.MatchIncludePartSoftenGroupIdRegex(groupId);
         }
     }
 }

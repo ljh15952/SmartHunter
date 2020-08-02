@@ -125,9 +125,21 @@ namespace SmartHunter.Game.Data.ViewModels
                 ConfigHelper.Main.Save();
             })));
 
+            Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowParts, GetString("LOC_SETTING_SHOW_PARTS"), GetString("LOC_SETTING_SHOW_PARTS_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowParts = !ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowParts;
+                ConfigHelper.Main.Save();
+            })));
+
             Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowUnchangedParts, GetString("LOC_SETTING_SHOW_UNCHANGED_PARTS"), GetString("LOC_SETTING_SHOW_UNCHANGED_PARTS_DESC"), new Command(_ =>
             {
                 ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowUnchangedParts = !ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowUnchangedParts;
+                ConfigHelper.Main.Save();
+            })));
+
+            Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowStatusEffects, GetString("LOC_SETTING_SHOW_STATUS_EFFECT"), GetString("LOC_SETTING_SHOW_STATUS_EFFECT_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowStatusEffects = !ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowStatusEffects;
                 ConfigHelper.Main.Save();
             })));
 

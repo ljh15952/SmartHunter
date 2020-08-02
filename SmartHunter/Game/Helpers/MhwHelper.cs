@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SmartHunter.Core;
@@ -75,6 +76,18 @@ namespace SmartHunter.Game.Helpers
                 public static readonly ulong CurrentHealth = 0x04;//0x10
                 public static readonly ulong TimesBrokenCount = 0x0C;//0x18
                 public static readonly ulong NextPart = 0x1F8;//0x3F0;
+            }
+
+            public static class MonsterSoftenPart
+            {
+                public static readonly ulong SoftenPartOffset = 0x1C458;
+                public static readonly ulong NextSoftenPart = 0x40;
+                public static readonly ulong MaxDuration = 0x0C;
+                public static readonly ulong MaxExtraDuration = 0x24;
+                public static readonly ulong CurrentDuration = 0x08;
+                public static readonly ulong CurrentExtraDuration = 0x20;
+                public static readonly ulong TimesCountOffset = 0x34;
+                public static readonly ulong PartIdOffset = 0x30;
             }
 
             public static class MonsterRemovablePartCollection
@@ -813,31 +826,26 @@ namespace SmartHunter.Game.Helpers
 
         private static void UpdateMonsterPartsSoften(Process process, Monster monster)
         {
+            ulong softenAddress = monster.Address + DataOffsets.MonsterSoftenPart.SoftenPartOffset;
             for (int i = 0; i <= 10; i++)
             {
-                ulong softenAddress = monster.Address + 0x1C458 + (ulong)(i * 0x40);
-                float maxTime = MemoryHelper.Read<float>(process, softenAddress + 0x0C) + MemoryHelper.Read<float>(process, softenAddress + 0x24);
-                float currentTime = MemoryHelper.Read<float>(process, softenAddress + 0x08) + MemoryHelper.Read<float>(process, softenAddress + 0x20);
-                uint timesBrokenCount = MemoryHelper.Read<uint>(process, softenAddress + 0x34);
-                uint partid = MemoryHelper.Read<uint>(process, softenAddress + 0x30);
+                softenAddress += (ulong)i * DataOffsets.MonsterSoftenPart.NextSoftenPart;
+                float maxTime = MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.MaxDuration) + MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.MaxExtraDuration);
+                float currentTime = MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.CurrentDuration) + MemoryHelper.Read<float>(process, softenAddress + DataOffsets.MonsterSoftenPart.CurrentExtraDuration);
+                uint timesCount = MemoryHelper.Read<uint>(process, softenAddress + DataOffsets.MonsterSoftenPart.TimesCountOffset);
+                uint partid = MemoryHelper.Read<uint>(process, softenAddress + DataOffsets.MonsterSoftenPart.PartIdOffset);
 
                 var partsoftens = monster.PartSoftens.Where(partsoften => partsoften.Address == softenAddress);
                 if (partsoftens.Any())
                     foreach (var partsoften in partsoftens)
                         if (partid != uint.MaxValue && maxTime > 0 && maxTime >= currentTime && partsoften.Time.Max == maxTime)
-                            monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesBrokenCount, partid);
+                            monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesCount, partid);
                         else
-                            monster.UpdateAndGetPartSoften(softenAddress, partsoften.Time.Max, 0, partsoften.TimesBrokenCount, partsoften.PartID);
+                            monster.UpdateAndGetPartSoften(softenAddress, partsoften.Time.Max, 0, partsoften.TimesCount, partsoften.PartID);
                 else if (partid != uint.MaxValue && maxTime > 0 && maxTime >= currentTime)
-                    monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesBrokenCount, partid);
+                    monster.UpdateAndGetPartSoften(softenAddress, maxTime, maxTime - currentTime, timesCount, partid);
             }
         }
-
-        /*private static void UpdateMonsterPartSoften(Process process, Monster monster, ulong softenAddress, float maxTime, float currentTime, uint timesBrokenCount, uint partID)
-        {
-            monster.UpdateAndGetPartSoften(softenAddress, maxTime, currentTime, timesBrokenCount, partID);
-        }*/
-
 
         private static void UpdateMonsterStatusEffects(Process process, Monster monster)
         {

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Linq;
 using SmartHunter.Core.Data;
 using SmartHunter.Game.Helpers;
@@ -46,7 +46,8 @@ namespace SmartHunter.Game.Data
         {
             get
             {
-                return IsIncluded(GroupId) && IsTimeVisible(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowUnchangedParts, ConfigHelper.Main.Values.Overlay.MonsterWidget.HidePartsAfterSeconds);
+                return IsIncluded(GroupId) && IsTimeVisible(ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowUnchangedParts, ConfigHelper.Main.Values.Overlay.MonsterWidget.HidePartsAfterSeconds)
+                    && ConfigHelper.Main.Values.Overlay.MonsterWidget.ShowParts;
             }
         }
 

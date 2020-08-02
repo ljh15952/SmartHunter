@@ -190,14 +190,14 @@ namespace SmartHunter.Game.Data
             return part;
         }
 
-        public MonsterPartSoften UpdateAndGetPartSoften(ulong address, float maxTime, float currentTime, uint timesBrokenCount, uint partID)
+        public MonsterPartSoften UpdateAndGetPartSoften(ulong address, float maxTime, float currentTime, uint timesCount, uint partID)
         {
             MonsterPartSoften partSoften = PartSoftens.SingleOrDefault(collectionPartSoften => collectionPartSoften.Address == address);
             if (partSoften != null)
             {
                 partSoften.Time.Max = maxTime;
                 partSoften.Time.Current = currentTime;
-                partSoften.TimesBrokenCount = timesBrokenCount;
+                partSoften.TimesCount = timesCount;
                 if (partSoften.PartID != partID)
                 {
                     partSoften.PartID = partID;
@@ -206,7 +206,7 @@ namespace SmartHunter.Game.Data
             }
             else
             {
-                partSoften = new MonsterPartSoften(this, address, maxTime, currentTime, timesBrokenCount, partID);
+                partSoften = new MonsterPartSoften(this, address, maxTime, currentTime, timesCount, partID);
                 partSoften.Changed += PartOrStatusEffect_Changed;
 
                 PartSoftens.Add(partSoften);

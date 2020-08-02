@@ -12,10 +12,12 @@ namespace SmartHunter.Game.Config
         public string IncludeStatusEffectGroupIdRegex = ".*";
         public bool ShowUnchangedMonsters = true;
         public float HideMonstersAfterSeconds = 999f;
+        public bool ShowParts = true;
         public bool ShowUnchangedParts = false;
         public float HidePartsAfterSeconds = 12f;
         public bool ShowSoftenParts = true;
         public float HideSoftenPartsAfterSeconds = 6f;
+        public bool ShowStatusEffects = true;
         public bool ShowUnchangedStatusEffects = false;
         public float HideStatusEffectsAfterSeconds = 12f;
 
