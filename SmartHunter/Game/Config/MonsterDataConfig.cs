@@ -242,6 +242,31 @@ namespace SmartHunter.Game.Config
                     true
                 )
             },
+            {
+                "em013_00", // true
+                new MonsterConfig("LOC_MONSTER_FATALIS",
+                    new MonsterPartConfig[]
+                    {
+                        new MonsterPartConfig("Part", "LOC_PART_HEAD"),
+                        new MonsterPartConfig("Part", "LOC_PART_NECK"),
+                        new MonsterPartConfig("Part", "LOC_PART_CHEST"),
+                        new MonsterPartConfig("Part", "LOC_PART_BODY"),
+                        new MonsterPartConfig("Part", "LOC_PART_WING_LEFT"),
+                        new MonsterPartConfig("Part", "LOC_PART_WING_RIGHT"),
+                        new MonsterPartConfig("Part", "LOC_PART_ARM_LEFT"),
+                        new MonsterPartConfig("Part", "LOC_PART_ARM_RIGHT"),
+                        new MonsterPartConfig("Part", "LOC_PART_LEG_LEFT"),
+                        new MonsterPartConfig("Part", "LOC_PART_LEG_RIGHT"),
+                        new MonsterPartConfig("Part", "LOC_PART_TAIL")
+                    },
+                    new MonsterSoftenPartsConfig[]
+                    {
+                    },
+                    4110.6f,
+                    new MonsterCrownConfig(CrownPreset.Standard),
+                    true
+                )
+            },
             { // true
                 "em018_00",
                 new MonsterConfig("LOC_MONSTER_YIAN_GARUGA",

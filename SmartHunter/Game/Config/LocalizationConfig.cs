@@ -87,6 +87,7 @@ namespace SmartHunter.Config
             { "LOC_MONSTER_XENO_JIIVA", "Xeno'jiiva" },
             { "LOC_MONSTER_ZORAH_MAGDAROS", "Zorah Magdaros" },
             { "LOC_MONSTER_ALATREON", "Alatreon"},
+            { "LOC_MONSTER_FATALIS", "Fatalis"},
             { "LOC_PART_UKNOWN", "Unknown Part" },
             { "LOC_SOFTEN_PARTID_UKNOWN", "Unknown Soften PartId" },
             { "LOC_PART_HEAD_SNOW", "Head Snow" },

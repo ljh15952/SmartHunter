@@ -10,7 +10,7 @@ namespace SmartHunter.Game.Config
 
         public BytePatternConfig CurrentPlayerNamePattern = new BytePatternConfig(
             "CurrentPlayerNamePattern",
-            "48 8B 0D ?? ?? ?? ?? 48 8D 55 ?? 45 31 C9 41 89 C0 E8"
+            "48 8B 0D ?? ?? ?? ?? 48 8D 55 ?? 45 33 C9 44 8B C0 E8"
             );
 
         public BytePatternConfig CurrentWeaponPattern = new BytePatternConfig(
