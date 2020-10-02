@@ -251,12 +251,12 @@ namespace SmartHunter.Game.Config
                         new MonsterPartConfig("Part", "LOC_PART_NECK"),
                         new MonsterPartConfig("Part", "LOC_PART_CHEST"),
                         new MonsterPartConfig("Part", "LOC_PART_BODY"),
-                        new MonsterPartConfig("Part", "LOC_PART_WING_LEFT"),
-                        new MonsterPartConfig("Part", "LOC_PART_WING_RIGHT"),
                         new MonsterPartConfig("Part", "LOC_PART_ARM_LEFT"),
                         new MonsterPartConfig("Part", "LOC_PART_ARM_RIGHT"),
                         new MonsterPartConfig("Part", "LOC_PART_LEG_LEFT"),
                         new MonsterPartConfig("Part", "LOC_PART_LEG_RIGHT"),
+                        new MonsterPartConfig("Part", "LOC_PART_WING_LEFT"),
+                        new MonsterPartConfig("Part", "LOC_PART_WING_RIGHT"),
                         new MonsterPartConfig("Part", "LOC_PART_TAIL")
                     },
                     new MonsterSoftenPartsConfig[]
