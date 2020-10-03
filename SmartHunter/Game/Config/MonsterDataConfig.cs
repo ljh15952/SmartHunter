@@ -261,6 +261,10 @@ namespace SmartHunter.Game.Config
                     },
                     new MonsterSoftenPartsConfig[]
                     {
+                        new MonsterSoftenPartsConfig("LOC_PART_HEAD", new uint[]{0, 3}),
+                        new MonsterSoftenPartsConfig("LOC_PART_ARMS", new uint[]{1, 4}),
+                        new MonsterSoftenPartsConfig("LOC_PART_LEG_LEFT", new uint[]{2}),
+                        new MonsterSoftenPartsConfig("LOC_PART_LEG_RIGHT", new uint[]{5})
                     },
                     4110.6f,
                     new MonsterCrownConfig(CrownPreset.Standard),
