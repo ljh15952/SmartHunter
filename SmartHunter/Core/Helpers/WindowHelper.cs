@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -21,8 +21,11 @@ namespace SmartHunter.Core.Helpers
         {
             get
             {
-                return (uint)WindowsApi.WindowStyleFlag.WS_EX_LAYERED
-                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOPMOST;
+                return ((uint)WindowsApi.WindowStyleFlag.WS_EX_LAYERED
+                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOPMOST
+                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOOLWINDOW)
+                    & ~(uint)WindowsApi.WindowStyleFlag.WS_EX_APPWINDOW;
+                ;
             }
         }
 
@@ -30,9 +33,12 @@ namespace SmartHunter.Core.Helpers
         {
             get
             {
-                return (uint)WindowsApi.WindowStyleFlag.WS_EX_LAYERED
+                return ((uint)WindowsApi.WindowStyleFlag.WS_EX_LAYERED
                     | (uint)WindowsApi.WindowStyleFlag.WS_EX_TRANSPARENT
-                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOPMOST;
+                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOPMOST
+                    | (uint)WindowsApi.WindowStyleFlag.WS_EX_TOOLWINDOW)
+                    & ~(uint)WindowsApi.WindowStyleFlag.WS_EX_APPWINDOW;
+                ;
             }
         }
 
