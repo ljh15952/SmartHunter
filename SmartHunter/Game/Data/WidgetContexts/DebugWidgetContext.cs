@@ -123,13 +123,13 @@ namespace SmartHunter.Game.Data.WidgetContexts
                             {
                                 if (CurrentGame.IsCurrentPlayerLobbyHost())
                                 {
-                                    CurrentGame.checkDone = result["result"]["players"].ToString().Equals("true");
+                                    CurrentGame.checkDone = result["result"]["players"].ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase);
                                 }
                                 else
                                 {
-                                    CurrentGame.checkDone = result["result"]["host"].ToString().Equals("true");
+                                    CurrentGame.checkDone = result["result"]["host"].ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase);
                                 }
-                                CurrentGame.playersCheckDone = result["result"]["players"].ToString().Equals("true");
+                                CurrentGame.playersCheckDone = result["result"]["players"].ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase);
                             }
                             else if (result != null && result["status"].ToString().Equals("error"))
                             {

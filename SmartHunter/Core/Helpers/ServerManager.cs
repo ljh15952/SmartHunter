@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmartHunter.Game.Data.ViewModels;
 using SmartHunter.Game.Helpers;
 
 namespace SmartHunter.Core.Helpers
 {
     public sealed class ServerManager
     {
-        private static readonly string apiEndpoint = "https://peppatime.altervista.org/smarthunter.php";
-
         public enum Command
         {
             ALIVE,
@@ -77,6 +75,11 @@ namespace SmartHunter.Core.Helpers
 
         static ServerManager()
         {
+            if (ConfigHelper.Main.Values.IgnoreHttpsErrors)
+            {
+                ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            }
+
             Stats = new Dictionary<Command, long[]>();
             foreach (var cmd in (Command[]) Enum.GetValues(typeof(Command)))
             {
@@ -179,20 +182,25 @@ namespace SmartHunter.Core.Helpers
 
                 if (ConfigHelper.Main.Values.Debug.ShowServerLogs)
                 {
-                    if (cmd == Command.PUSH)
+                    switch (cmd)
                     {
-                        Log.WriteLine($"Sending {command.ToUpper()} with data of size {stringContent.Headers.ContentLength} byte");
-                    }
-                    else
-                    {
-                        Log.WriteLine($"Sending {command.ToUpper()} with parameters {await stringContent.ReadAsStringAsync()}");
+                        case Command.PUSH:
+                            Log.WriteLine($"Sending {command.ToUpper()} with data of size {stringContent.Headers.ContentLength} byte");
+                            break;
+
+                        case Command.ALIVE:
+                            Log.WriteLine($"Sending {command.ToUpper()} to {ConfigHelper.Main.Values.ServerUrl} with data of size {stringContent.Headers.ContentLength} byte");
+                            break;
+
+                        default:
+                            Log.WriteLine($"Sending {command.ToUpper()} with parameters {await stringContent.ReadAsStringAsync()}");
+                            break;
                     }
                 }
 
                 Stopwatch stpw = new Stopwatch();
                 stpw.Start();
-
-                HttpResponseMessage response = await client.PostAsync(apiEndpoint, stringContent);
+                HttpResponseMessage response = await client.PostAsync(ConfigHelper.Main.Values.ServerUrl, stringContent);
 
                 stpw.Stop();
                 Stats[cmd][4] += stpw.ElapsedMilliseconds;

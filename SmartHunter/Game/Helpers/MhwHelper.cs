@@ -372,7 +372,7 @@ namespace SmartHunter.Game.Helpers
                                 OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.checkDone = false;
                                 OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.playersCheckDone = false;
                             }
-                            else if (result["result"].ToString().Equals("false"))
+                            else if (result["result"].ToString().Equals("false", StringComparison.CurrentCultureIgnoreCase))
                             {
                                 OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.playersCheckDone = false;
                             }
@@ -537,7 +537,7 @@ namespace SmartHunter.Game.Helpers
                                     {
                                         if (result != null && result["status"].ToString().Equals("error"))
                                         {
-                                            if (result["result"].ToString().Equals("false"))
+                                            if (result["result"].ToString().Equals("false", StringComparison.CurrentCultureIgnoreCase))
                                             {
                                                 OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.checkDone = false;
                                             }
@@ -605,7 +605,7 @@ namespace SmartHunter.Game.Helpers
                                     {
                                         if (result["status"].ToString().Equals("error"))
                                         {
-                                            if (result["result"].ToString().Equals("false"))
+                                            if (result["result"].ToString().Equals("false", StringComparison.CurrentCultureIgnoreCase))
                                             {
                                                 OverlayViewModel.Instance.DebugWidget.Context.CurrentGame.checkDone = false;
                                             }

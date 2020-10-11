@@ -220,6 +220,17 @@ namespace SmartHunter.Game.Data.ViewModels
                 ConfigHelper.Main.Values.Debug.ShowServerLogs = !ConfigHelper.Main.Values.Debug.ShowServerLogs;
                 ConfigHelper.Main.Save();
             })));
+
+            Settings.Add(new Setting(ConfigHelper.Main.Values.IgnoreHttpsErrors, GetString("LOC_SETTING_IGNORE_HTTPS_ERRORS"), GetString("LOC_SETTING_IGNORE_HTTPS_ERRORS_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.IgnoreHttpsErrors = !ConfigHelper.Main.Values.IgnoreHttpsErrors;
+                ConfigHelper.Main.Save();
+                var result = MessageBox.Show(GetString("LOC_SETTING_RESTART_DESC"), GetString("LOC_SETTING_RESTART"), MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes)
+                {
+                    restartSmartHunter();
+                }
+            })));
         }
     }
 }
