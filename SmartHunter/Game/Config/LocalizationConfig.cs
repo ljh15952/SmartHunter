@@ -315,7 +315,7 @@ namespace SmartHunter.Config
             { "LOC_STATUS_EFFECT_HEALTH_RECOVERY", "Health Recovery" },
             { "LOC_STATUS_EFFECT_HEALTH_BOOST", "Health Boost" },
             { "LOC_STATUS_EFFECT_STAMINA_USE_REDUCED", "Stamina Use Reduced" },
-            
+
             // Debuffs
             { "LOC_STATUS_EFFECT_FIREBLIGHT", "Fireblight" },
             { "LOC_STATUS_EFFECT_THUNDERBLIGHT", "Thunderblight" },
@@ -330,7 +330,7 @@ namespace SmartHunter.Config
             { "LOC_STATUS_EFFECT_NO_ITEMS", "No Items" },
             { "LOC_STATUS_EFFECT_BLASTBLIGHT", "Blastblight" },
             { "LOC_STATUS_EFFECT_BLASTSCOURGE", "Blastscourge" },
-            
+
             // Buffs
             { "LOC_STATUS_EFFECT_DASH_JUICE", "Dash Juice" },
             { "LOC_STATUS_EFFECT_WIGGLY_LITCHI", "Wiggly Litchi" },
@@ -492,7 +492,9 @@ namespace SmartHunter.Config
             { "LOC_SETTING_DEGUB_WIDGET", "Debug Widget"},
             { "LOC_SETTING_DEGUB_WIDGET_DESC", "Show/Hide Debug Widget"},
             { "LOC_SETTING_SHOW_SERVER_LOGS", "Show server logs"},
-            { "LOC_SETTING_SHOW_SERVER_LOGS_DESC", "Show server logs"}
+            { "LOC_SETTING_SHOW_SERVER_LOGS_DESC", "Show server logs"},
+            { "LOC_SETTING_IGNORE_HTTPS_ERRORS", "Ignore server HTTPS certificate errors" },
+            { "LOC_SETTING_IGNORE_HTTPS_ERRORS_DESC", "In case you're hosting server locally and dont have correct certificate configured" }
         };
 
         public LocalizationConfig()

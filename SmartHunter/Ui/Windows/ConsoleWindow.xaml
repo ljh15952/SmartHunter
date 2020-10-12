@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:core="clr-namespace:SmartHunter.Core"
         xmlns:viewModels="clr-namespace:SmartHunter.Game.Data.ViewModels"
+        xmlns:controls="clr-namespace:SmartHunter.Ui.Controls"
         d:DataContext="{x:Static viewModels:ConsoleViewModel.Instance}"
         mc:Ignorable="d"
         Title="SmartHunter" Height="450" Width="800"
@@ -21,7 +22,7 @@
 
     <TabControl TabStripPlacement="Top">
         <TabItem Header="Logs" x:Name="LogsTab">
-            <TextBox Text="{Binding Output}" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" VerticalScrollBarVisibility="Visible" />
+            <controls:ScrollingTextBox Text="{Binding Output}" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" VerticalScrollBarVisibility="Visible" />
         </TabItem>
         <TabItem Header="Settings" x:Name="SettingsTab">
             <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
