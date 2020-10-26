@@ -113,6 +113,17 @@ namespace SmartHunter.Game.Data.ViewModels
                 ConfigHelper.Main.Save();
             })));
 
+            Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.TeamWidget.ShowChart, GetString("LOC_SETTING_TEAM_WIDGET_SHOW_CHART"), GetString("LOC_SETTING_TEAM_WIDGET_SHOW_CHART_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.Overlay.TeamWidget.ShowChart = !ConfigHelper.Main.Values.Overlay.TeamWidget.ShowChart;
+                ConfigHelper.Main.Save();
+                var result = MessageBox.Show(GetString("LOC_SETTING_RESTART_DESC"), GetString("LOC_SETTING_RESTART"), MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes)
+                {
+                    restartSmartHunter();
+                }
+            })));
+
             Settings.Add(new Setting(ConfigHelper.Main.Values.Overlay.MonsterWidget.IsVisible, GetString("LOC_SETTING_MONSTER_WIDGET"), GetString("LOC_SETTING_MONSTER_WIDGET_DESC"), new Command(_ =>
             {
                 ConfigHelper.Main.Values.Overlay.MonsterWidget.IsVisible = !ConfigHelper.Main.Values.Overlay.MonsterWidget.IsVisible;

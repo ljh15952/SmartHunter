@@ -1,7 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SmartHunter.Core;
 using SmartHunter.Core.Data;
 using SmartHunter.Game.Data.ViewModels;
 using SmartHunter.Game.Helpers;
@@ -41,6 +40,13 @@ namespace SmartHunter.Game.Data.WidgetContexts
             set { SetProperty(ref m_ShowPercents, value); }
         }
 
+        bool m_ShowChart = false;
+        public bool ShowChart
+        {
+            get { return m_ShowChart; }
+            set { SetProperty(ref m_ShowChart, value); }
+        }
+
         public TeamWidgetContext()
         {
             Players = new Collection<Player>();
@@ -48,6 +54,8 @@ namespace SmartHunter.Game.Data.WidgetContexts
 
             UpdateFromConfig();
         }
+
+        public event EventHandler PlayersDamageUpdated;
 
         public Player UpdateAndGetPlayer(int index, string name, int damage)
         {
@@ -114,6 +122,9 @@ namespace SmartHunter.Game.Data.WidgetContexts
                 return;
             }
 
+            NormalizeDamagePoints();
+            PlayersDamageUpdated?.Invoke(this, EventArgs.Empty);
+
             var highestDamagePlayers = Players.OrderByDescending(player => player.Damage).Take(1);
             if (highestDamagePlayers.Any())
             {
@@ -135,6 +146,76 @@ namespace SmartHunter.Game.Data.WidgetContexts
         {
             Players.Clear();
             Fake_Players.Clear();
+            PlayersDamageUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Make sure that all players have datapoints at latest available timestamp
+        /// </summary>
+        private void NormalizeDamagePoints()
+        {
+            var maxTimeStamp = Players.Max(p => p.DamagePoints.LastOrDefault()?.TimeStamp);
+            if (maxTimeStamp == null) return;
+
+            foreach (var player in Players)
+            {
+                var last = player.DamagePoints.LastOrDefault();
+                if (last == null)
+                {
+                    player.DamagePoints.Add(new DamagePoint(maxTimeStamp.Value, 0));
+                }
+                else if (last.TimeStamp < maxTimeStamp)
+                {
+                    player.DamagePoints.Add(new DamagePoint(maxTimeStamp.Value, last.Damage));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds datapoints for current timestamp so plot will continue even without new damage
+        /// </summary>
+        /// <param name="msThreshold">add point only if latest point older then this value</param>
+        public void PadDamagePoints(long msThreshold = 0)
+        {
+            var maxTimeStamp = Players.Max(p => p.DamagePoints.LastOrDefault()?.TimeStamp);
+            if (maxTimeStamp == null)
+            {
+                // no datapoints present, don't have to update anything
+                return;
+            }
+
+            var now = DateTime.Now.ToFileTime();
+            if (msThreshold != 0 && now - maxTimeStamp <= msThreshold)
+            {
+                return;
+            }
+
+            foreach (var player in Players)
+            {
+                var dmgPoints = player.DamagePoints;
+                var last = dmgPoints.LastOrDefault();
+                var beforeLast = dmgPoints.Count > 1
+                    ? dmgPoints[dmgPoints.Count - 2]
+                    : null;
+
+                if (last == null)
+                {
+                    // no point present, adding first one at 0 damage
+                    dmgPoints.Add(new DamagePoint(now, 0));
+                }
+                else if (beforeLast?.Damage == last.Damage)
+                {
+                    // if last two points identical, we can just update last one
+                    // Removing and adding again to trigger collection update
+                    dmgPoints.RemoveAt(dmgPoints.Count - 1);
+                    last.TimeStamp = now;
+                    dmgPoints.Add(last);
+                }
+                else
+                {
+                    dmgPoints.Add(new DamagePoint(now, last.Damage));
+                }
+            }
         }
 
         public override void UpdateFromConfig()
@@ -145,6 +226,7 @@ namespace SmartHunter.Game.Data.WidgetContexts
             ShowBars = ConfigHelper.Main.Values.Overlay.TeamWidget.ShowBars;
             ShowNumbers = ConfigHelper.Main.Values.Overlay.TeamWidget.ShowNumbers;
             ShowPercents = ConfigHelper.Main.Values.Overlay.TeamWidget.ShowPercents;
+            ShowChart = ConfigHelper.Main.Values.Overlay.TeamWidget.ShowChart;
         }
     }
 }

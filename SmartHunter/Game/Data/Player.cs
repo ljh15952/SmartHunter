@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using SmartHunter.Core.Data;
 
 namespace SmartHunter.Game.Data
@@ -25,7 +25,15 @@ namespace SmartHunter.Game.Data
         public int Damage
         {
             get { return m_Damage; }
-            set { SetProperty(ref m_Damage, value); }
+            set
+            {
+                if (m_Damage != value)
+                {
+                    UpdateDamagePoint(value);
+                }
+
+                SetProperty(ref m_Damage, value);
+            }
         }
 
         float m_DamageFraction;
@@ -41,6 +49,14 @@ namespace SmartHunter.Game.Data
             get { return m_BarFraction; }
             set { SetProperty(ref m_BarFraction, value); }
         }
+
+        private void UpdateDamagePoint(int damage)
+        {
+            var timestamp = DateTime.Now.ToFileTime();
+            DamagePoints.Add(new DamagePoint(timestamp, damage));
+        }
+
+        public ObservableCollection<DamagePoint> DamagePoints { get; } = new ObservableCollection<DamagePoint>();
 
         public int CompareTo(Player other)
         {
