@@ -2,19 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    
+
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:pfComponentModel="clr-namespace:System.ComponentModel;assembly=PresentationFramework"
                     xmlns:wbComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-                    
+
                     xmlns:converters="clr-namespace:SmartHunter.Ui.Converters"
+                    xmlns:behaviors="clr-namespace:SmartHunter.Ui.Behaviors"
                     xmlns:coreData="clr-namespace:SmartHunter.Core.Data"
                     xmlns:data="clr-namespace:SmartHunter.Game.Data"
                     xmlns:widgetContexts="clr-namespace:SmartHunter.Game.Data.WidgetContexts"
                     xmlns:Windows="clr-namespace:SmartHunter.Ui.Windows"
+
+                    xmlns:oxy="http://oxyplot.org/wpf"
+                    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                     mc:Ignorable="d"
-                    
-                    >
+>
 
     <!--Base Resources-->
 
@@ -129,7 +132,7 @@
                         <Path.Data>
                             <PathGeometry>
                                 <PathFigure StartPoint="5,0">
-                                    <ArcSegment RotationAngle="0" SweepDirection="Clockwise" Size="5,5" 
+                                    <ArcSegment RotationAngle="0" SweepDirection="Clockwise" Size="5,5"
                                                 Point="{Binding Angle, ConverterParameter=5, Converter={StaticResource A_Converter_AngleToPoint}}"
                                                 IsLargeArc="{Binding Angle, Converter={StaticResource A_Converter_AngleToIsLargeArc}}" />
                                 </PathFigure>
@@ -1639,7 +1642,34 @@
                 <SolidColorBrush Color="{StaticResource A_Color_Widget_Background}" />
             </Grid.Background>
 
-            <ItemsControl x:Name="PlayersControl" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" Style="{StaticResource A_Style_ItemsControl_Players}" />
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <oxy:Plot Background="Transparent"
+                          TextColor="Transparent"
+                          PlotAreaBorderColor="Transparent" PlotMargins="0" Height="100"
+                          Visibility="{Binding ShowChart, Converter={StaticResource A_Converter_BoolToVisibility}}">
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Position="Left" TickStyle="None" />
+                        <oxy:LinearAxis Position="Bottom" TickStyle="None"  />
+                    </oxy:Plot.Axes>
+                    <oxy:Plot.Series>
+                        <oxy:AreaSeries Color="{StaticResource A_Color_Player_0}" />
+                        <oxy:AreaSeries Color="{StaticResource A_Color_Player_1}" />
+                        <oxy:AreaSeries Color="{StaticResource A_Color_Player_2}" />
+                        <oxy:AreaSeries Color="{StaticResource A_Color_Player_3}" />
+                    </oxy:Plot.Series>
+
+                    <b:Interaction.Behaviors>
+                        <behaviors:UpdateOxyPlotBehavior TickInterval="200" />
+                    </b:Interaction.Behaviors>
+                </oxy:Plot>
+            </Grid>
+
+            <ItemsControl Grid.Row="1" x:Name="PlayersControl" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" Style="{StaticResource A_Style_ItemsControl_Players}" />
         </Grid>
 
         <DataTemplate.Triggers>

@@ -457,6 +457,8 @@ namespace SmartHunter.Config
             { "LOC_SETTING_TEAM_WIDGET_SHOW_NUMBERS_DESC", "Show Numbers inside Team Widget"},
             { "LOC_SETTING_TEAM_WIDGET_SHOW_PERCENTS", "Team Widget show percents"},
             { "LOC_SETTING_TEAM_WIDGET_SHOW_PERCENTS_DESC", "Show Percents inside Team Widget"},
+            { "LOC_SETTING_TEAM_WIDGET_SHOW_CHART", "Team Widget show chart"},
+            { "LOC_SETTING_TEAM_WIDGET_SHOW_CHART_DESC", "Show per player damage chart inside Team Widget"},
             { "LOC_SETTING_MONSTER_WIDGET", "Monster Widget"},
             { "LOC_SETTING_MONSTER_WIDGET_DESC", "Show/Hide Monsters Widget"},
             { "LOC_SETTING_SHOW_UNCHANGED_MONSTERS", "Show unchanged monsters"},

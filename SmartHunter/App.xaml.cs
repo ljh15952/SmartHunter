@@ -54,7 +54,7 @@ namespace SmartHunter
             }
             catch
             {
-                
+
             }
 
             m_Overlay = new MhwOverlay(new ConsoleWindow(), new TeamWidgetWindow(), new MonsterWidgetWindow(), new PlayerWidgetWindow(), new DebugWidgetWindow());
@@ -98,6 +98,7 @@ namespace SmartHunter
 
                 using (var streamReader = new StreamReader(m_SkinFile.FullPathFileName, Encoding.UTF8))
                 {
+                    LoadExternalAssemblies();
                     var xmlReaderSettings = new XamlXmlReaderSettings
                     {
                         LocalAssembly = Assembly.GetExecutingAssembly()
@@ -127,7 +128,14 @@ namespace SmartHunter
                 Log.WriteException(ex);
             }
 
-            m_LastSkinFileName = skinFileName;            
+            m_LastSkinFileName = skinFileName;
+        }
+
+        void LoadExternalAssemblies()
+        {
+            // External dependencies should be loaded into AppDomain before they can be used in dynamically loaded XAML (Default.xaml)
+            Assembly.Load(typeof(OxyPlot.Wpf.Plot).Assembly.GetName());
+            Assembly.Load(typeof(Microsoft.Xaml.Behaviors.Behavior).Assembly.GetName());
         }
 
         void SetPerMonitorDpiAwareness()
