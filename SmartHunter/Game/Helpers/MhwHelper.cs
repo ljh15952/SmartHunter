@@ -150,6 +150,7 @@ namespace SmartHunter.Game.Helpers
         private static int lastNetworkOperationTimeD = 0;
         private static bool networkOperationDoneD = true;
         private static int[,] expeditionDamageChecker = new int[DataOffsets.PlayerDamage.MaxOnScreenDamages, 2];
+        private static ulong[] monsterAddresses = new ulong[3];
 
         public static void UpdateCurrentGame(Process process, ulong playerNameCollectionAddress, ulong currentPlayerNameAddress, ulong currentWeaponAddress, ulong lobbyStatusAddress)
         {
@@ -446,27 +447,9 @@ namespace SmartHunter.Game.Helpers
                     return;
                 }
 
-                List<ulong> monsterAddresses = new List<ulong>();
-                //https://github.com/Haato3o/HunterPie
-                /*
-                //ulong firstMonster = MemoryHelper.Read<ulong>(process, monsterBaseList + DataOffsets.Monster.PreviousMonsterOffset);
-
-                if (firstMonster == 0x0)
-                {
-                    firstMonster = monsterBaseList;
-                }
-
-                //firstMonster += DataOffsets.Monster.MonsterStartOfStructOffset;
-
-                //ulong currentMonsterAddress = firstMonster;
-                while (currentMonsterAddress != 0)
-                {
-                    monsterAddresses.Insert(0, currentMonsterAddress);
-                    currentMonsterAddress = MemoryHelper.Read<ulong>(process, currentMonsterAddress + DataOffsets.Monster.NextMonsterOffset);
-                }*/
-                monsterAddresses.Insert(0, monsterBaseList);
-                monsterAddresses.Insert(0, MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x40);
-                monsterAddresses.Insert(0, MemoryHelper.Read<ulong>(process, MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x10) + 0x40);
+                monsterAddresses[0] = monsterBaseList;
+                monsterAddresses[1] = MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x40;
+                monsterAddresses[2] = MemoryHelper.Read<ulong>(process, MemoryHelper.Read<ulong>(process, monsterBaseList - 0x30) + 0x10) + 0x40;
                 List<Monster> updatedMonsters = new List<Monster>();
                 foreach (var monsterAddress in monsterAddresses)
                 {
@@ -597,6 +580,7 @@ namespace SmartHunter.Game.Helpers
 
                                                     UpdateMonsterParts(monsterPartsData, monster);
                                                     UpdateMonsterStatusEffects(monsterStatusesData, monster);
+                                                    UpdateMonsterPartsSoften(process, monster);
                                                 }
                                             }
                                         }
