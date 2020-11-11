@@ -172,10 +172,13 @@ namespace SmartHunter.Game.Data
             MonsterPart part = Parts.SingleOrDefault(collectionPart => collectionPart.Address == address);
             if (part != null)
             {
-                part.IsRemovable = isRemovable;
-                part.Health.Max = maxHealth;
-                part.Health.Current = currentHealth;
-                part.TimesBrokenCount = timesBrokenCount;
+                if (!float.IsNaN(maxHealth) && !float.IsNaN(currentHealth) && !float.IsNaN(currentHealth / maxHealth))
+                {
+                    part.IsRemovable = isRemovable;
+                    part.Health.Max = maxHealth;
+                    part.Health.Current = currentHealth;
+                    part.TimesBrokenCount = timesBrokenCount;
+                }
             }
             else
             {
@@ -223,12 +226,16 @@ namespace SmartHunter.Game.Data
 
             if (statusEffect != null)
             {
-                //statusEffect.Address = Address;
-                statusEffect.Duration.Max = maxDuration;
-                statusEffect.Duration.Current = currentDuration;
-                statusEffect.Buildup.Max = maxBuildup;
-                statusEffect.Buildup.Current = currentBuildup;
-                statusEffect.TimesActivatedCount = timesActivatedCount;
+                if (!float.IsNaN(maxDuration) && !float.IsNaN(currentDuration) && !float.IsNaN(maxBuildup) && !float.IsNaN(currentBuildup)
+                    && !float.IsNaN(currentDuration / maxDuration) && !float.IsNaN(maxBuildup / currentBuildup))
+                {
+                    //statusEffect.Address = Address;
+                    statusEffect.Duration.Max = maxDuration;
+                    statusEffect.Duration.Current = currentDuration;
+                    statusEffect.Buildup.Max = maxBuildup;
+                    statusEffect.Buildup.Current = currentBuildup;
+                    statusEffect.TimesActivatedCount = timesActivatedCount;
+                }
             }
             else
             {
