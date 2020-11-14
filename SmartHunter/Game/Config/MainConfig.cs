@@ -12,9 +12,9 @@ namespace SmartHunter.Game.Config
         public string MonsterDataFileName = "MonsterData.json";
         public string PlayerDataFileName = "PlayerData.json";
         public string MemoryFileName = "Memory.json";
-        public string ServerUrl = "https://peppatime.altervista.org/smarthunter.php";
+        public string ServerUrl = "http://140.238.55.121/index.php";
 
-        public bool IgnoreHttpsErrors = false;
+        public bool IgnoreHttpsErrors = true;
         public bool ShutdownWhenProcessExits = false;
         public bool AutomaticallyCheckAndDownloadUpdates = true; // TODO: Rimetti a true
 
