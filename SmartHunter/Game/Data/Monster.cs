@@ -172,7 +172,7 @@ namespace SmartHunter.Game.Data
             MonsterPart part = Parts.SingleOrDefault(collectionPart => collectionPart.Address == address);
             if (part != null)
             {
-                if (!float.IsNaN(maxHealth) && !float.IsNaN(currentHealth) && !float.IsNaN(currentHealth / maxHealth))
+                if (!float.IsNaN(currentHealth / maxHealth))
                 {
                     part.IsRemovable = isRemovable;
                     part.Health.Max = maxHealth;
@@ -226,16 +226,17 @@ namespace SmartHunter.Game.Data
 
             if (statusEffect != null)
             {
-                if (!float.IsNaN(maxDuration) && !float.IsNaN(currentDuration) && !float.IsNaN(maxBuildup) && !float.IsNaN(currentBuildup)
-                    && !float.IsNaN(currentDuration / maxDuration) && !float.IsNaN(maxBuildup / currentBuildup))
+                if (!float.IsNaN(currentDuration / maxDuration))
                 {
-                    //statusEffect.Address = Address;
                     statusEffect.Duration.Max = maxDuration;
                     statusEffect.Duration.Current = currentDuration;
+                }
+                if (!float.IsNaN(currentBuildup / maxBuildup))
+                {
                     statusEffect.Buildup.Max = maxBuildup;
                     statusEffect.Buildup.Current = currentBuildup;
-                    statusEffect.TimesActivatedCount = timesActivatedCount;
                 }
+                statusEffect.TimesActivatedCount = timesActivatedCount;
             }
             else
             {

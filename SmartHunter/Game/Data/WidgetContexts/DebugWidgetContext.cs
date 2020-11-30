@@ -34,7 +34,7 @@ namespace SmartHunter.Game.Data.WidgetContexts
                     {
                         ServerManager.Instance.RequestCommadWithHandler(ServerManager.Command.ELEVATE, CurrentGame.key, null, true, 0, null);
                     }
-                    if (!CurrentGame.LobbyID.Equals(OutdatedLobbyID))
+                    if (!CurrentGame.LobbyID.Equals(OutdatedLobbyID) || CurrentGame.key == "")
                     {
                         SHA1 sha = new SHA1CryptoServiceProvider();
                         CurrentGame.key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(CurrentGame.SessionID + CurrentGame.LobbyID)));
@@ -54,7 +54,8 @@ namespace SmartHunter.Game.Data.WidgetContexts
                                         {
                                             ServerManager.Instance.IsServerOline = -1;
                                             Log.WriteLine("A new version is available, please update if you want to use the server!");
-                                        }else if (result["result"].ToString().Equals("dev"))
+                                        }
+                                        else if (result["result"].ToString().Equals("dev"))
                                         {
                                             ServerManager.Instance.IsServerOline = -1;
                                             Log.WriteLine("The server is under maintenance!");
@@ -64,9 +65,10 @@ namespace SmartHunter.Game.Data.WidgetContexts
                             });
                         }
                         CurrentGame.helloDone = false;
+                        CurrentGame.checkDone = false;
                         OutdatedLobbyID = CurrentGame.LobbyID;
                     }
-                    if (!CurrentGame.helloDone && networkOperationDone && DateTime.Now.Second - (lastNetworkOperationTime > DateTime.Now.Second ? lastNetworkOperationTime - 60 : lastNetworkOperationTime) >= 5)
+                    if (!CurrentGame.helloDone && networkOperationDone && DateTime.Now.Second - (lastNetworkOperationTime > DateTime.Now.Second ? lastNetworkOperationTime - 60 : lastNetworkOperationTime) >= 5 && CurrentGame.key != "")
                     {
                         networkOperationDone = false;
                         ServerManager.Instance.RequestCommadWithHandler(ServerManager.Command.HELLO, CurrentGame.key, null, CurrentGame.IsCurrentPlayerLobbyHost(), 0, null, (result, ping) =>
@@ -172,7 +174,8 @@ namespace SmartHunter.Game.Data.WidgetContexts
                             if (result != null && !result["status"].ToString().Equals("error"))
                             {
                                 Log.WriteLine($"Left lobby with id '{result["result"]}'");
-                            }else if (result != null && result["status"].ToString().Equals("error"))
+                            }
+                            else if (result != null && result["status"].ToString().Equals("error"))
                             {
                                 if (result["result"].ToString().Equals("v"))
                                 {
