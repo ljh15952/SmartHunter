@@ -82,7 +82,7 @@ namespace SmartHunter.Game.Helpers
                 Log.WriteLine($"Localization: Monster '{monsterId}' soften partid '{partId}' not found in {ConfigHelper.MonsterData.FileName}");
             }
             Log.WriteLine($"Localization: Monster '{monsterId}' soften partid '{partId}' not found in {ConfigHelper.MonsterData.FileName}");
-            return GetString(UnknownSoftenPartId) + " " + monsterId + " partId:" + partId;
+            return GetString(UnknownSoftenPartId) + " " + partId + " in" + monsterId;
         }
 
         public static string GetMonsterStatusEffectName(int index)

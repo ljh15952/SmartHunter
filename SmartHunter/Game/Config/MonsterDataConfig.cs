@@ -614,11 +614,9 @@ namespace SmartHunter.Game.Config
                     },
                     new MonsterSoftenPartsConfig[]
                     {
-                        new MonsterSoftenPartsConfig("LOC_PART_HEAD", new uint[]{0, 4}),
-                        new MonsterSoftenPartsConfig("LOC_PART_BODY", new uint[]{1, 5}),
-                        new MonsterSoftenPartsConfig("LOC_PART_LEG_LEFT", new uint[]{2}),
-                        new MonsterSoftenPartsConfig("LOC_PART_LEG_RIGHT", new uint[]{6}),
-                        new MonsterSoftenPartsConfig("LOC_PART_TAIL", new uint[]{3, 7})
+                        new MonsterSoftenPartsConfig("LOC_PART_HEAD", new uint[]{0, 3}),
+                        new MonsterSoftenPartsConfig("LOC_PART_ARMS", new uint[]{1, 4}),
+                        new MonsterSoftenPartsConfig("LOC_PART_TAIL", new uint[]{2, 5})
                     },
                     2063.82f,
                     new MonsterCrownConfig(CrownPreset.Alternate)
@@ -1441,6 +1439,7 @@ namespace SmartHunter.Game.Config
                 new MonsterConfig("LOC_MONSTER_ODOGARON",
                     new MonsterPartConfig[]
                     {
+                        new MonsterPartConfig("Removable", "LOC_PART_UKNOWN", true),
                         new MonsterPartConfig("Removable", "LOC_REMOVABLE_PART_TAIL", true),
                         new MonsterPartConfig("Part", "LOC_PART_HEAD"),
                         new MonsterPartConfig("Part", "LOC_PART_BODY"),
@@ -1464,7 +1463,8 @@ namespace SmartHunter.Game.Config
                 new MonsterConfig("LOC_MONSTER_EBONY_ODOGARON",
                     new MonsterPartConfig[]
                     {
-                       new MonsterPartConfig("Removable", "LOC_REMOVABLE_PART_TAIL", true),
+                        new MonsterPartConfig("Removable", "LOC_PART_UKNOWN", true),
+                        new MonsterPartConfig("Removable", "LOC_REMOVABLE_PART_TAIL", true),
                         new MonsterPartConfig("Part", "LOC_PART_HEAD"),
                         new MonsterPartConfig("Part", "LOC_PART_BODY"),
                         new MonsterPartConfig("Part", "LOC_PART_ARMS"),
