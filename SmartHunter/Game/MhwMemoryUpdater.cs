@@ -71,6 +71,30 @@ namespace SmartHunter.Game
             }
         }
 
+        protected override string UserDataPath
+        {
+            get
+            {
+                return ConfigHelper.Main.Values.UserDataPath;
+            }
+        }
+
+        protected override bool BackupWhenProcessExits
+        {
+            get
+            {
+                return ConfigHelper.Main.Values.BackupWhenProcessExits;
+            }
+        }
+
+        protected override bool StartMHWWhenSmartHunterStart
+        {
+            get
+            {
+                return ConfigHelper.Main.Values.StartMHWWhenSmartHunterStart;
+            }
+        }
+
         public MhwMemoryUpdater()
         {
             ConfigHelper.Main.Loaded += (s, e) => { TryUpdateTimerInterval(); };

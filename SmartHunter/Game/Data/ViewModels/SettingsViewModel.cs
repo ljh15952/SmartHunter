@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Input;
 using SmartHunter.Core;
 using SmartHunter.Core.Data;
 using SmartHunter.Game.Helpers;
@@ -26,7 +25,7 @@ namespace SmartHunter.Game.Data.ViewModels
             }
         }
 
-        public List<Setting> Settings { get; }
+        public IList<Setting> Settings { get; }
 
         private void restartSmartHunter()
         {
@@ -58,11 +57,33 @@ namespace SmartHunter.Game.Data.ViewModels
                 }
             })));
 
+            Settings.Add(new Setting(ConfigHelper.Main.Values.StartMHWWhenSmartHunterStart, GetString("LOC_SETTING_START_MHW_WHEN_SMARTHUNTER_START"), GetString("LOC_SETTING_START_MHW_WHEN_SMARTHUNTER_START_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.StartMHWWhenSmartHunterStart = !ConfigHelper.Main.Values.StartMHWWhenSmartHunterStart;
+                ConfigHelper.Main.Save();
+            })));
+
             Settings.Add(new Setting(ConfigHelper.Main.Values.ShutdownWhenProcessExits, GetString("LOC_SETTING_SHUTDOWN_WHEN_PROCESS_EXIT"), GetString("LOC_SETTING_SHUTDOWN_WHEN_PROCESS_EXIT_DESC"), new Command(_ =>
             {
                 ConfigHelper.Main.Values.ShutdownWhenProcessExits = !ConfigHelper.Main.Values.ShutdownWhenProcessExits;
                 ConfigHelper.Main.Save();
             })));
+
+            Settings.Add(new Setting(false, $"{GetString("LOC_SETTING_USERADATA_PATH")} '{ConfigHelper.Main.Values.UserDataPath}'", GetString("LOC_SETTING_USERADATA_PATH_DESC"), new Command(_ =>
+            {
+                System.Windows.Forms.FolderBrowserDialog path = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = path.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                    ConfigHelper.Main.Values.UserDataPath = path.SelectedPath;
+                ConfigHelper.Main.Save();
+            })));
+
+            Settings.Add(new Setting(ConfigHelper.Main.Values.BackupWhenProcessExits, GetString("LOC_SETTING_BACKUP_WHEN_PROCESS_EXIT"), GetString("LOC_SETTING_BACKUP_WHEN_PROCESS_EXIT_DESC"), new Command(_ =>
+            {
+                ConfigHelper.Main.Values.BackupWhenProcessExits = !ConfigHelper.Main.Values.BackupWhenProcessExits;
+                ConfigHelper.Main.Save();
+            })));
+
             Settings.Add(new Setting(ConfigHelper.Main.Values.AutomaticallyCheckAndDownloadUpdates, GetString("LOC_SETTING_AUTO_CHECK_AND_DOWNLOAD_UPDATES"), GetString("LOC_SETTING_AUTO_CHECK_AND_DOWNLOAD_UPDATES_DESC"), new Command(_ =>
             {
                 ConfigHelper.Main.Values.AutomaticallyCheckAndDownloadUpdates = !ConfigHelper.Main.Values.AutomaticallyCheckAndDownloadUpdates;

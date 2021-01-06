@@ -17,13 +17,13 @@ namespace SmartHunter.Game.Config
         public BytePatternConfig CurrentWeaponPattern = new BytePatternConfig(
             "CurrentWeaponPattern",
             "48 8B 0D ?? ?? ?? ?? 4C 8D 45 ?? 48 8D 97 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 ",
-            "1411A5D86"
+            "1411A5DD6"
             );
 
         public BytePatternConfig PlayerDamagePattern = new BytePatternConfig(
             "PlayerDamagePattern",
             "48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 75 04 33 C9",
-            "141A5EED7"
+            "141A5EF27"
             );
 
         public BytePatternConfig PlayerNamePattern = new BytePatternConfig(
@@ -41,13 +41,13 @@ namespace SmartHunter.Game.Config
         public BytePatternConfig PlayerBuffPattern = new BytePatternConfig(
             "PlayerBuffPattern",
             "48 8B 05 ?? ?? ?? ?? 41 8B 94 00 ?? ?? ?? ?? 89 57 ??",
-            "142245571"
+            "1422455C1"
             );
 
         public BytePatternConfig SelectedMonsterPattern = new BytePatternConfig(
             "SelectedMonsterPattern",
             "48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 83 A0 ?? ?? ?? ?? ?? C6 43 ?? ??",
-            "141A98242"
+            "141A98292"
             );
 
         public BytePatternConfig LobbyStatusPattern = new BytePatternConfig(

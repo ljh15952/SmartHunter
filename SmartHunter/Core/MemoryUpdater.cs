@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace SmartHunter.Core
             DownloadingUpdates,
             Restarting,
             WaitingForProcess,
+            StartMHW,
             ProcessFound,
             FastPatternScanning,
             PatternScanning,
@@ -36,10 +38,12 @@ namespace SmartHunter.Core
 
         protected abstract string ProcessName { get; }
         protected abstract BytePattern[] Patterns { get; }
-
+        protected virtual string UserDataPath { get { return @"C:\Program Files (x86)\Steam\userdata"; } }
         protected virtual int ThreadsPerScan { get { return 2; } }
         protected virtual int UpdatesPerSecond { get { return 20; } }
         protected virtual bool ShutdownWhenProcessExits { get { return false; } }
+        protected virtual bool BackupWhenProcessExits { get { return false; } }
+        protected virtual bool StartMHWWhenSmartHunterStart { get { return false; } }
 
         protected Process Process { get; private set; }
 
@@ -73,7 +77,7 @@ namespace SmartHunter.Core
                             Log.WriteLine("Searching for updates (You can disable this feature in file 'Config.json')!");
                         }),
                     new StateMachine<State>.Transition(
-                        State.WaitingForProcess,
+                        State.StartMHW,
                         () => !ConfigHelper.Main.Values.Overlay.MonsterWidget.UseNetworkServer && !ConfigHelper.Main.Values.AutomaticallyCheckAndDownloadUpdates,
                         () =>
                         {
@@ -131,7 +135,7 @@ namespace SmartHunter.Core
                 new StateMachine<State>.Transition[]
                 {
                     new StateMachine<State>.Transition(
-                        State.WaitingForProcess,
+                        State.StartMHW,
                         () => !ConfigHelper.Main.Values.Overlay.MonsterWidget.UseNetworkServer && !updater.CheckForUpdates(),
                         () =>
                         {
@@ -203,7 +207,7 @@ namespace SmartHunter.Core
                             Log.WriteLine("Successfully downloaded all files!");
                         }),
                     new StateMachine<State>.Transition(
-                        State.WaitingForProcess,
+                        State.StartMHW,
                         () => !updater.DownloadUpdates(),
                         () =>
                         {
@@ -239,12 +243,47 @@ namespace SmartHunter.Core
                 new StateMachine<State>.Transition[]
                 {
                     new StateMachine<State>.Transition(
-                        State.WaitingForProcess,
+                        State.StartMHW,
                         () => ServerManager.Instance.IsServerOline != 0,
                         () =>
                         {
                             Initialize();
                         })
+                }));
+
+            m_StateMachine.Add(State.StartMHW, new StateMachine<State>.StateData(
+                null,
+                new StateMachine<State>.Transition[]
+                {
+                    new StateMachine<State>.Transition(
+                        State.WaitingForProcess,
+                        () =>
+                        {
+                            if(CheckProcess())
+                                return true;
+                            if(!StartMHWWhenSmartHunterStart)
+                            {
+                                Log.WriteLine("Start MHW When SmartHunter Start = false");
+                                return true;
+                            }
+                            Log.WriteLine("Start MHW.");
+                            try
+                            {
+                                Process.Start(new ProcessStartInfo
+                                {
+                                    FileName =  "steam://run/582010",
+                                    Arguments = "",
+                                    UseShellExecute = true
+                                });
+                                return true;
+                            }
+                            catch(Exception ex)
+                            {
+                                Log.WriteException(ex);
+                                return false;
+                            }
+                        },
+                        null)
                 }));
 
             m_StateMachine.Add(State.WaitingForProcess, new StateMachine<State>.StateData(
@@ -255,26 +294,11 @@ namespace SmartHunter.Core
                         State.ProcessFound,
                         () =>
                         {
-                            var processes = Process.GetProcesses();
-                            foreach (var p in processes)
-                            {
-                                try
-                                {
-                                    if (p != null && p.ProcessName.Equals(ProcessName) && !p.HasExited)
-                                    {
-                                        Process = p;
-                                        return true;
-                                    }
-                                }
-                                catch
-                                {
-                                    // nothing here
-                                }
-                            }
-                            return false;
+                            return CheckProcess();
                         },
                         null)
                 }));
+
 
             m_StateMachine.Add(State.ProcessFound, new StateMachine<State>.StateData(
                 null,
@@ -431,7 +455,32 @@ namespace SmartHunter.Core
             m_MemoryScans = new List<ThreadedMemoryScan>();
 
             OverlayViewModel.Instance.IsGameActive = false;
-
+            if (processExited && BackupWhenProcessExits)
+            {
+                try
+                {
+                    string zipPath = @"UserDataBackup\";
+                    string fileName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".zip";
+                    string filepath = Path.Combine(zipPath, fileName);
+                    if (!Directory.Exists(zipPath))
+                        Directory.CreateDirectory(zipPath);
+                    if (File.Exists(filepath))
+                        File.Delete(filepath);
+                    if (Directory.Exists(UserDataPath))
+                    {
+                        ZipFile.CreateFromDirectory(UserDataPath, filepath);
+                        Log.WriteLine("MonsterHunterWorld process exits. Start backup 'UserData'.");
+                    }
+                    else
+                    {
+                        Log.WriteLine("Backup fail 'UserData' path not exist.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteException(ex);
+                }
+            }
             if (processExited && ShutdownWhenProcessExits)
             {
                 Log.WriteLine("Process exited. Shutting down");
@@ -465,6 +514,27 @@ namespace SmartHunter.Core
             {
                 m_DispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, targetMilliseconds);
             }
+        }
+
+        private bool CheckProcess()
+        {
+            var processes = Process.GetProcesses();
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (p != null && p.ProcessName.Equals(ProcessName) && !p.HasExited)
+                    {
+                        Process = p;
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // nothing here
+                }
+            }
+            return false;
         }
     }
 }
