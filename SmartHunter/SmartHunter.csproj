@@ -9,11 +9,12 @@
         <LangVersion>latest</LangVersion>
         <AssemblyTitle>SmartHunter</AssemblyTitle>
         <Deterministic>false</Deterministic>
-        <AssemblyVersion>2021.06.15.00</AssemblyVersion>
-        <FileVersion>2021.06.15.00</FileVersion>
+        <AssemblyVersion>2023.10.28.00</AssemblyVersion>
+        <FileVersion>2023.10.28.00</FileVersion>
         <OutputPath>bin\$(Configuration)</OutputPath>
         <UseWPF>true</UseWPF>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DebugType>full</DebugType>

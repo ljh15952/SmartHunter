@@ -123,7 +123,7 @@ namespace SmartHunter.Game.Helpers
             {
                 public static readonly int IDLength = 12 + 1; // +1 for null terminator
                 public static readonly int PlayerNameLength = 32 + 1; // +1 for null terminator
-                public static readonly ulong FirstPlayerName = 0x53305;//old 0x532ED
+                public static readonly ulong FirstPlayerName = 0x532D5;
                 public static readonly ulong SessionID = FirstPlayerName + 0xF43;
                 public static readonly ulong SessionHostPlayerName = SessionID + 0x3F;
                 public static readonly ulong LobbyID = FirstPlayerName + 0x463;
