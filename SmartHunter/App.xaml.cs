@@ -23,10 +23,6 @@ namespace SmartHunter
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
-           
-
-
             //var culture = new System.Globalization.CultureInfo("es-ES");
             //System.Globalization.CultureInfo.CurrentCulture = culture;
             //System.Globalization.CultureInfo.CurrentUICulture = culture;
@@ -34,7 +30,6 @@ namespace SmartHunter
             // Initialize the console view model first thing so we can see any problems that may occur
             var consoleViewModel = ConsoleViewModel.Instance;
             Log.WriteLine("HELLO WORLD!!!!!!!");
-            Debug.WriteLine("HELLO WORLD!!!!!!!");
             Log.WriteLine($"Started {Assembly.GetExecutingAssembly().GetName().Version}");
             //Log.WriteLine($"Culture: {System.Globalization.CultureInfo.CurrentCulture.Name}");
 
